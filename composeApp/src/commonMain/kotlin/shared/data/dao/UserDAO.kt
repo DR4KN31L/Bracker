@@ -13,11 +13,14 @@ interface UserDAO {
     @Upsert
     suspend fun upsertUser(user: User)
 
-    @Query("SELECT * FROM users WHERE username = :username LIMIT 1")
-    suspend fun getUserByUsername(username: String): User
+    @Query("SELECT username FROM users WHERE username = :username LIMIT 1")
+    suspend fun getUserByUsername(username: String): String?
 
     @Query("SELECT * FROM users")
     fun getUsers(): Flow<List<User>>
+
+    @Query("SELECT COUNT(*) FROM users WHERE username = :username")
+    suspend fun doesUserExist(username: String): Int
 
     @Delete
     suspend fun delete(user: User)

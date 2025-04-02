@@ -17,4 +17,7 @@ class UserRepository(private val database: BrackerDB) {
         return database.usersDAO().getUsers()
     }
 
+    suspend fun doesUserExist(username: String): Boolean {
+        return database.usersDAO().doesUserExist(username) > 0
+    }
 }

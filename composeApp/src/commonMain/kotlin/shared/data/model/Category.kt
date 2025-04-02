@@ -21,7 +21,7 @@ import kotlin.uuid.ExperimentalUuidApi
 )
 data class Category (
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int? = null,
     val name: String,
     val items: Int,
     val userId: Int // Clave Foranea de User:Id

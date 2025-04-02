@@ -1,15 +1,14 @@
 package shared.viewModel
 
-import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import shared.data.repository.AuthManagerRepository
+import shared.utils.Sanitizer
 
 
 class LoginViewModel(private val loginRepository: AuthManagerRepository) : ViewModel() {
-    val maxLenght = 15
 
     var username by mutableStateOf("")
         private set
@@ -21,11 +20,11 @@ class LoginViewModel(private val loginRepository: AuthManagerRepository) : ViewM
         private set
 
     fun onUsernameChange(newUsername: String) {
-        if(username.length < maxLenght ) username = newUsername
+        if(Sanitizer.validateInputLength(newUsername)) username = newUsername
     }
 
     fun onPasswordChange(newPassword: String) {
-        if(password.length < maxLenght ) password = newPassword
+        if(Sanitizer.validateInputLength(newPassword)) password = newPassword
     }
 
     fun login() {
