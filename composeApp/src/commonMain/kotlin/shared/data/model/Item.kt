@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.util.Date
 //UUID
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -22,8 +23,9 @@ import kotlin.uuid.ExperimentalUuidApi
 )
 data class Item(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
+    val id: Int? = null,
     val categoryId: Int,
     val name: String,
+    val date : Date,
     val price: Double
 )

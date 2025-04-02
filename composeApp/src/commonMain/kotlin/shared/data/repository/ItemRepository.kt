@@ -1,4 +1,9 @@
 package shared.data.repository
 
-class ItemRepository {
+import kotlinx.coroutines.Dispatchers
+import shared.data.localDb.BrackerDB
+
+class ItemRepository(private val database: BrackerDB) {
+    private val dispatcher = Dispatchers.IO
+
 }

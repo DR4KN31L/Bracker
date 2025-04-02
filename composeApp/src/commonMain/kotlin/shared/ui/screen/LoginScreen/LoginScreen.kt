@@ -1,4 +1,4 @@
-package shared.ui.screen
+package shared.ui.screen.LoginScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -11,10 +11,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -27,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import bracker.composeapp.generated.resources.Res
 import bracker.composeapp.generated.resources.compose_multiplatform
@@ -35,17 +39,15 @@ import org.jetbrains.compose.resources.painterResource
 fun onClick(data: String) {
     println("Data From View: $data")
 }
-/*
-* Hay que inyectar el viewmodel de manera adecuadaa con Koin
-* y generar la correción de este view.
-* */
-@Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
 
-    var username by remember { mutableStateOf("") }
+
+@Composable
+fun LoginScreen(username: String?,modifier: Modifier = Modifier,onNavigateToCreateAccount: () -> Unit) {
+
+    var username by remember { mutableStateOf(username?: "") }
     var password by remember { mutableStateOf("") }
     val maxChars = 15
-
+    var isPasswordVisible by remember { mutableStateOf(false) }
 
     MaterialTheme {
         Column(
@@ -75,7 +77,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                     label = { Text("Username") },
                     maxLines = 1,
                     leadingIcon = {
-                        Icon(Icons.Filled.Person, contentDescription = "Person Icon")
+                        Icon(Icons.Filled.AccountCircle, contentDescription = "Person Icon")
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -87,11 +89,19 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         if(password.length < maxChars) password = it
                     },
                     label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
                     maxLines = 1,
                     leadingIcon = {
                         Icon(Icons.Filled.Lock, contentDescription = "Passwd Icon")
                     },
+                    trailingIcon = {
+                        IconButton(onClick = { isPasswordVisible = !isPasswordVisible }){
+                            Icon(
+                                imageVector = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                contentDescription = if (isPasswordVisible) "Hide Password" else "Show Password"
+                            )
+                        }
+                    },
+                    visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(4.dp),
@@ -111,7 +121,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                         Text("Log in")
                     }
                     ElevatedButton(
-                        onClick = { onClick(password) },
+                        onClick = {onNavigateToCreateAccount()},
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(8.dp)
                     ) {

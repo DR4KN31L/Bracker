@@ -1,4 +1,4 @@
-package shared.ui.screen
+package shared.ui.screen.PresentationScreen
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
@@ -6,9 +6,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -23,17 +20,18 @@ import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
-fun SplashScreen(onTimeout: () -> Unit, modifier: Modifier = Modifier){
+fun SplashScreen(modifier: Modifier = Modifier,onTimeOut:(String?) -> Unit){
     val alpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        alpha.animateTo(1f, animationSpec = tween(800))
-        delay(1000)
-        alpha.animateTo(0f, animationSpec = tween(700))
-        onTimeout()
+        delay(500)
+        alpha.animateTo(1f, animationSpec = tween(1250))
+        delay(500)
+        alpha.animateTo(0f, animationSpec = tween(1250))
+        onTimeOut(null)
     }
         Box(
-            modifier = modifier.fillMaxSize().background(Color(0xFF282A36)),
+            modifier = modifier.fillMaxSize().background(Color.DarkGray),
             contentAlignment = Alignment.Center
         ) {
             Image(
@@ -43,5 +41,4 @@ fun SplashScreen(onTimeout: () -> Unit, modifier: Modifier = Modifier){
                 modifier = modifier.alpha(alpha.value)
             )
         }
-
 }
