@@ -26,7 +26,6 @@ import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,11 +38,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import bracker.composeapp.generated.resources.Res
 import bracker.composeapp.generated.resources.compose_multiplatform
 import kotlinx.coroutines.launch
@@ -103,7 +100,7 @@ fun CreateAccountScreen(onNavigateBack : (String) -> Unit ,modifier: Modifier = 
                     }
 
                     IconButton(
-                        onClick = { onNavigateBack(username) },
+                        onClick = { onNavigateBack("") },
                         modifier = Modifier
                             .padding(16.dp)
                             .align(Alignment.TopStart)
@@ -187,7 +184,11 @@ fun CreateAccountScreen(onNavigateBack : (String) -> Unit ,modifier: Modifier = 
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 ElevatedButton(
-                                    onClick = { viewModel.createUser() },
+                                    onClick = {
+                                        viewModel.createUser { success ->
+                                            if (success) onNavigateBack(username)
+                                        }
+                                    },
                                     modifier = Modifier.weight(1f),
                                     shape = RoundedCornerShape(8.dp)
                                 ) {

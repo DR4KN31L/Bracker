@@ -4,6 +4,7 @@ import android.app.Application
 import com.bracker.app.di.androidDatabaseModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import shared.di.authModule
 import shared.di.sharedModule
 
 class BrackerApp: Application() {
@@ -12,7 +13,7 @@ class BrackerApp: Application() {
 
         startKoin{
             androidContext(this@BrackerApp)
-            modules(androidDatabaseModule, sharedModule)
+            modules(androidDatabaseModule, sharedModule, authModule)
         }
     }
 }

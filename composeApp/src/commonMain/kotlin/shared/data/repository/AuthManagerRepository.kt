@@ -1,6 +1,5 @@
 package shared.data.repository
 
-import shared.data.dao.AuthDAO
 import shared.data.localDb.BrackerDB
 import shared.data.model.LoggedInUser
 

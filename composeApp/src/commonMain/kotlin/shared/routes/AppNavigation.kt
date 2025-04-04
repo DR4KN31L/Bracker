@@ -1,28 +1,23 @@
 package shared.routes
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.navigation.toRoute
-import org.koin.compose.KoinContext
-import org.koin.core.context.KoinContext
 import shared.ui.screen.HomeScreen.HomeScreen
 import shared.ui.screen.LoginScreen.CreateAccountScreen
 import shared.ui.screen.LoginScreen.LoginScreen
 import shared.ui.screen.PresentationScreen.SplashScreen
+import shared.utils.animatedNavExitTransitions
+import shared.utils.animatedNavTransitions
+import shared.utils.animatedPopEnter
+import shared.utils.animatedPopExit
+
 
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    val animationDuration = 300
 
     NavHost(navController = navController, startDestination = Routes.SplashScreen) {
         composable<Routes.SplashScreen>{
@@ -32,19 +27,23 @@ fun AppNavigation() {
             })
         }
         composable<Routes.Login>(
-            enterTransition = { slideInHorizontally (initialOffsetX = { it }, animationSpec = tween(animationDuration)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(animationDuration)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(animationDuration)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(animationDuration)) }
+            enterTransition = animatedNavTransitions(),
+            exitTransition = animatedNavExitTransitions(),
+            popEnterTransition = animatedPopEnter(),
+            popExitTransition = animatedPopExit()
         ) { backStackEntry ->
             val createAccountPage = backStackEntry.toRoute<Routes.Login>()
-            LoginScreen(username = createAccountPage?.username, onNavigateToCreateAccount = { navController.navigate(Routes.CreateAccount) })
+            LoginScreen(
+                usernameParam = createAccountPage?.username,
+                onNavigateToCreateAccount = { navController.navigate(Routes.CreateAccount)},
+                onNavigateHome = { navController.navigate(Routes.Home)}
+            )
         }
         composable<Routes.CreateAccount>(
-            enterTransition = { slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(animationDuration)) },
-            exitTransition = { slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(animationDuration)) },
-            popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(animationDuration)) },
-            popExitTransition = { slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(animationDuration)) }
+            enterTransition = animatedNavTransitions(),
+            exitTransition = animatedNavExitTransitions(),
+            popEnterTransition = animatedPopEnter(),
+            popExitTransition = animatedPopExit()
         ) {
             CreateAccountScreen(onNavigateBack = { username ->
                 navController.navigate(Routes.Login(username)) {
@@ -52,11 +51,13 @@ fun AppNavigation() {
                 }
             })
         }
-        composable<Routes.Home> {
-            HomeScreen(onNavigateBack = {navController.navigate(Routes.Login){
-                    popUpTo(Routes.Login) { inclusive = true }
-                }
-            })
+        composable<Routes.Home>(
+            enterTransition = animatedNavTransitions(),
+            exitTransition = animatedNavExitTransitions(),
+            popEnterTransition = animatedPopEnter(),
+            popExitTransition = animatedPopExit()
+        ) {
+            HomeScreen()
         }
     }
 }

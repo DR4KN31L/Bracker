@@ -3,6 +3,8 @@ package shared.viewModel
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import jdk.dynalink.Operation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -10,7 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import shared.data.model.User
-import shared.domain.userUseCase.UserUseCase
+import shared.domain.UserUseCase.UserUseCase
+import shared.utils.OperationResult
 import shared.utils.Sanitizer
 
 class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
@@ -23,6 +26,9 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
         private set
     var password = MutableStateFlow("")
         private set
+
+    private val _userCreated = MutableStateFlow<Boolean?>(null)
+    val userCreated: StateFlow<Boolean?> = _userCreated
 
     private val _snackbarChannel = Channel<Pair<String, Color>>(Channel.BUFFERED)
     val snackbarMessages = _snackbarChannel.receiveAsFlow()
@@ -55,24 +61,35 @@ class UserViewModel(private val userUseCase: UserUseCase) : ViewModel() {
     private val _users = MutableStateFlow<List<User>?>(null)
     val users: StateFlow<List<User>?> = _users
 
-    fun createUser() {
+    fun createUser(onResult: (Boolean) -> Unit) {
         val user = User(
             name = name.value,
             lastname = lastName.value,
             username = username.value,
             password = password.value
         )
+
         viewModelScope.launch {
-            println("Create User Launched...")
             val userExist = userUseCase.doesUserExists(username.value)
 
-            val message = if (userExist) {
-                "Cuenta no válida" to Color.Red
-            }else {
-                userUseCase.createUser(user)
-                "Cuenta creada" to Color.Green
+            val success = if (userExist) {
+                _snackbarChannel.send("Cuenta no válida" to Color.Red)
+                false
+            } else {
+                when (userUseCase.createUser(user)) {
+                    OperationResult.Created -> {
+                        _snackbarChannel.send("Cuenta Creada" to Color.Green)
+                        true
+                    }
+                    else -> {
+                        _snackbarChannel.send("No es posible realizar la acción" to Color.Red)
+                        false
+                    }
+                }
             }
-            _snackbarChannel.send(message)
+            delay(500)
+            onResult(success) // Llamar el callback con el resultado
         }
     }
+
 }

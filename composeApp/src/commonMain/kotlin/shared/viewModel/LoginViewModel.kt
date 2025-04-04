@@ -1,33 +1,45 @@
 package shared.viewModel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import shared.data.repository.AuthManagerRepository
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
+import shared.data.model.LoggedInUser
+import shared.domain.AuthUseCase.AuthUseCase
 import shared.utils.Sanitizer
+import java.util.concurrent.StructuredTaskScope.ShutdownOnSuccess
 
 
-class LoginViewModel(private val loginRepository: AuthManagerRepository) : ViewModel() {
+class LoginViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
 
-    var username by mutableStateOf("")
+    var username  = MutableStateFlow("")
         private set
 
-    var password by mutableStateOf("")
+    var password = MutableStateFlow("")
         private set
 
-    var isLoading by mutableStateOf(false)
-        private set
-
-    fun onUsernameChange(newUsername: String) {
-        if(Sanitizer.validateInputLength(newUsername)) username = newUsername
+    fun setInitialUsername(value: String?) {
+        if (!value.isNullOrBlank() && Sanitizer.validateInputLength(value)) {
+            username.value = value
+        }
     }
 
-    fun onPasswordChange(newPassword: String) {
-        if(Sanitizer.validateInputLength(newPassword)) password = newPassword
+    fun onUsernameChanged(newValue: String) {
+        if (Sanitizer.validateInputLength(newValue)) {
+            username.value = newValue
+        }
     }
 
-    fun login() {
+    fun onPasswordChanged(newValue: String) {
+        if (Sanitizer.validateInputLength(newValue)) {
+            password.value = newValue
+        }
+    }
 
+    fun logIn(onResult: (Boolean) -> Unit){
+        viewModelScope.launch {
+            val data = authUseCase.loggedInUser(username.value, password.value)
+            onResult(data != null)
+        }
     }
 }
