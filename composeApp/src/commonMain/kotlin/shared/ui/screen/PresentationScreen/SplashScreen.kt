@@ -24,10 +24,10 @@ fun SplashScreen(modifier: Modifier = Modifier,onTimeOut:(String?) -> Unit){
     val alpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        delay(500)
-        alpha.animateTo(1f, animationSpec = tween(1250))
-        delay(500)
-        alpha.animateTo(0f, animationSpec = tween(1250))
+        delay(250)
+        alpha.animateTo(1f, animationSpec = tween(675))
+        delay(250)
+        alpha.animateTo(0f, animationSpec = tween(675))
         onTimeOut(null)
     }
         Box(

@@ -20,7 +20,7 @@ const val DATABASE_NAME = "bracker.db"
 
 @Database(
     entities = [User::class, Category::class, Item::class],
-    version = 3,
+    version = 4,
     exportSchema = true)
 @TypeConverters(Converters::class)
 @ConstructedBy(AppDatabaseConstructor::class)

@@ -1,6 +1,5 @@
 package shared.di
 
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.module.dsl.singleOf
@@ -9,9 +8,8 @@ import org.koin.dsl.module
 import shared.data.localDb.BrackerDB
 import shared.data.localDb.CreateDatabase
 import shared.data.repository.UserRepository
-import shared.viewModel.LoginViewModel
 import shared.viewModel.UserViewModel
-import shared.domain.userUseCase.UserUseCase
+import shared.domain.UserUseCase.UserUseCase
 
 val sharedModule = module {
     single<BrackerDB> { CreateDatabase(get()).getDatabase() }
@@ -25,5 +23,4 @@ val sharedModule = module {
 
     // ViewModels
     viewModelOf(::UserViewModel)
-    viewModelOf(::LoginViewModel)
 }

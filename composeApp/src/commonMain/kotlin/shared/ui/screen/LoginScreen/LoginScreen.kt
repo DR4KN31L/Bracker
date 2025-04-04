@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ElevatedButton
@@ -22,6 +23,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,19 +38,23 @@ import androidx.compose.ui.unit.dp
 import bracker.composeapp.generated.resources.Res
 import bracker.composeapp.generated.resources.compose_multiplatform
 import org.jetbrains.compose.resources.painterResource
-
-fun onClick(data: String) {
-    println("Data From View: $data")
-}
-
+import org.koin.compose.viewmodel.koinViewModel
+import shared.viewModel.LoginViewModel
 
 @Composable
-fun LoginScreen(username: String?,modifier: Modifier = Modifier,onNavigateToCreateAccount: () -> Unit) {
+fun LoginScreen(usernameParam: String?,modifier: Modifier = Modifier,onNavigateToCreateAccount: () -> Unit,onNavigateHome:() -> Unit) {
 
-    var username by remember { mutableStateOf(username?: "") }
-    var password by remember { mutableStateOf("") }
-    val maxChars = 15
     var isPasswordVisible by remember { mutableStateOf(false) }
+
+    val viewModel = koinViewModel<LoginViewModel>()
+    val username = viewModel.username.collectAsState().value
+    val password = viewModel.password.collectAsState().value
+
+    LaunchedEffect(usernameParam) {
+        if(username.isNotEmpty()){ viewModel.setInitialUsername(usernameParam) }
+    }
+
+    println("[TEST] userAccount : $username")
 
     MaterialTheme {
         Column(
@@ -71,13 +78,11 @@ fun LoginScreen(username: String?,modifier: Modifier = Modifier,onNavigateToCrea
                 )
                 OutlinedTextField(
                     value = username,
-                    onValueChange = {
-                        if(username.length < maxChars) username = it
-                    },
+                    onValueChange = { viewModel.onUsernameChanged(it) },
                     label = { Text("Username") },
                     maxLines = 1,
                     leadingIcon = {
-                        Icon(Icons.Filled.AccountCircle, contentDescription = "Person Icon")
+                        Icon(Icons.Filled.Person, contentDescription = "Person Icon")
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -85,13 +90,11 @@ fun LoginScreen(username: String?,modifier: Modifier = Modifier,onNavigateToCrea
                 )
                 OutlinedTextField(
                     value = password,
-                    onValueChange = {
-                        if(password.length < maxChars) password = it
-                    },
+                    onValueChange = { viewModel.onPasswordChanged(it)},
                     label = { Text("Password") },
                     maxLines = 1,
                     leadingIcon = {
-                        Icon(Icons.Filled.Lock, contentDescription = "Passwd Icon")
+                        Icon(Icons.Filled.Lock, contentDescription = "Password Icon")
                     },
                     trailingIcon = {
                         IconButton(onClick = { isPasswordVisible = !isPasswordVisible }){
@@ -114,7 +117,11 @@ fun LoginScreen(username: String?,modifier: Modifier = Modifier,onNavigateToCrea
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ElevatedButton(
-                        onClick = { onClick(username) },
+                        onClick = {
+                            viewModel.logIn { success ->
+                                if (success) onNavigateHome()
+                            }
+                        },
                         modifier = Modifier.weight(1f),
                         shape = RoundedCornerShape(8.dp)
                     ) {
