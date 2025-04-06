@@ -20,18 +20,19 @@ const val DATABASE_NAME = "bracker.db"
 
 @Database(
     entities = [User::class, Category::class, Item::class],
-    version = 4,
-    exportSchema = true)
+    version = 5,
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 @ConstructedBy(AppDatabaseConstructor::class)
-abstract class BrackerDB: RoomDatabase() {
-    abstract fun itemsDao() : ItemDAO
-    abstract fun usersDAO() : UserDAO
-    abstract fun categoriesDAO() : CategoryDAO
-    abstract fun authDAO() : AuthDAO
+abstract class BrackerDB : RoomDatabase() {
+    abstract fun itemsDao(): ItemDAO
+    abstract fun usersDAO(): UserDAO
+    abstract fun categoriesDAO(): CategoryDAO
+    abstract fun authDAO(): AuthDAO
 }
 
 @Suppress("NO_ACTUAL_FOR_EXPECT")
-expect object AppDatabaseConstructor: RoomDatabaseConstructor<BrackerDB>{
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<BrackerDB> {
     override fun initialize(): BrackerDB
 }

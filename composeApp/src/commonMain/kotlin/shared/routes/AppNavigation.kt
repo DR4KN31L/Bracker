@@ -20,10 +20,11 @@ fun AppNavigation() {
     val navController = rememberNavController()
 
     NavHost(navController = navController, startDestination = Routes.SplashScreen) {
-        composable<Routes.SplashScreen>{
-            SplashScreen(onTimeOut = { navController.navigate(Routes.Login()){
-                popUpTo(Routes.SplashScreen) { inclusive = true }
-            }
+        composable<Routes.SplashScreen> {
+            SplashScreen(onTimeOut = {
+                navController.navigate(Routes.Login()) {
+                    popUpTo(Routes.SplashScreen) { inclusive = true }
+                }
             })
         }
         composable<Routes.Login>(
@@ -34,9 +35,9 @@ fun AppNavigation() {
         ) { backStackEntry ->
             val createAccountPage = backStackEntry.toRoute<Routes.Login>()
             LoginScreen(
-                usernameParam = createAccountPage?.username,
-                onNavigateToCreateAccount = { navController.navigate(Routes.CreateAccount)},
-                onNavigateHome = { navController.navigate(Routes.Home)}
+                usernameParam = createAccountPage.username,
+                onNavigateToCreateAccount = { navController.navigate(Routes.CreateAccount) },
+                onNavigateHome = { navController.navigate(Routes.Home) }
             )
         }
         composable<Routes.CreateAccount>(

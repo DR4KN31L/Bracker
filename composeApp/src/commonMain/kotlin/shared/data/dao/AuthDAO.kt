@@ -2,11 +2,11 @@ package shared.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import shared.data.model.LoggedInUser
+import shared.data.model.UserHelper
 
 @Dao
 interface AuthDAO {
 
-    @Query("SELECT id,name,lastname FROM users WHERE username = :username AND password = :password LIMIT 1")
-    suspend fun loginUser(username : String, password : String): LoggedInUser
+    @Query("SELECT id,name,lastname,password FROM users WHERE username = :username LIMIT 1")
+    suspend fun loginUser(username : String): UserHelper?
 }

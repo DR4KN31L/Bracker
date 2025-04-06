@@ -1,13 +1,16 @@
 package shared.viewModel
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import shared.data.model.LoggedInUser
 import shared.domain.AuthUseCase.AuthUseCase
 import shared.utils.Sanitizer
-import java.util.concurrent.StructuredTaskScope.ShutdownOnSuccess
+import shared.utils.Sanitizer.Companion.validateLogin
 
 
 class LoginViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
@@ -17,6 +20,9 @@ class LoginViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
 
     var password = MutableStateFlow("")
         private set
+
+    private val _snackbarChannel = Channel<Pair<String, Color>>(Channel.BUFFERED)
+    val snackbarMessages = _snackbarChannel.receiveAsFlow()
 
     fun setInitialUsername(value: String?) {
         if (!value.isNullOrBlank() && Sanitizer.validateInputLength(value)) {
@@ -36,10 +42,24 @@ class LoginViewModel(private val authUseCase: AuthUseCase) : ViewModel() {
         }
     }
 
-    fun logIn(onResult: (Boolean) -> Unit){
+    fun logIn(onResult: (Boolean,LoggedInUser?) -> Unit){
+
         viewModelScope.launch {
-            val data = authUseCase.loggedInUser(username.value, password.value)
-            onResult(data != null)
+
+            val validateLoginError = validateLogin(username.value,password.value)
+            println(validateLoginError)
+            if (validateLoginError != null){
+                _snackbarChannel.send(validateLoginError to Color.Red)
+                onResult(false,null)
+                return@launch
+            }
+
+            val loggedUser = authUseCase.loggedInUser(username.value, password.value)
+
+            if (loggedUser == null){
+                _snackbarChannel.send("Usuario/contraseña incorrectas" to Color.Red)
+            }
+            onResult(loggedUser != null,loggedUser)
         }
     }
 }
