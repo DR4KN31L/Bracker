@@ -8,8 +8,8 @@ import org.koin.dsl.module
 import shared.data.localDb.BrackerDB
 import shared.data.localDb.CreateDatabase
 import shared.data.repository.UserRepository
-import shared.viewModel.UserViewModel
 import shared.domain.UserUseCase.UserUseCase
+import shared.viewModel.UserViewModel
 
 val sharedModule = module {
     single<BrackerDB> { CreateDatabase(get()).getDatabase() }

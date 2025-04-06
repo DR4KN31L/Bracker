@@ -17,6 +17,8 @@ kotlin = "2.1.10"
 kotlinx-coroutines = "1.10.1"
 identityJvm = "202411.1"
 #room
+kotlinxSerializationJson = "1.8.0"
+navigationCompose = "2.8.0-alpha10"
 room = "2.7.0-rc03"
 #Koin Dependency Injection framework
 koin = "4.0.2"
@@ -47,6 +49,8 @@ identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.
 #Sqlite Dependencies
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 #Room Dependencies
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+navigation-compose = { module = "org.jetbrains.androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 

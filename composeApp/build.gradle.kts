@@ -47,8 +47,9 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
-            implementation("org.jetbrains.androidx.navigation:navigation-compose:2.8.0-alpha10")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
+            implementation(libs.navigation.compose)
+            implementation(libs.kotlinx.serialization.json)
+            implementation("at.favre.lib:bcrypt:0.10.2")
 
             //Rom
             implementation(libs.room.runtime)

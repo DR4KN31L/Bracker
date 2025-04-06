@@ -2,7 +2,6 @@ package shared.data.repository
 
 import androidx.sqlite.SQLiteException
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import shared.data.localDb.BrackerDB
 import shared.data.model.User
@@ -32,11 +31,8 @@ class UserRepository(private val database: BrackerDB) {
         }
     }
 
-    fun getAllUser(): Flow<List<User>?> {
-        return database.usersDAO().getUsers()
-    }
-
     suspend fun doesUserExist(username: String): Boolean {
         return database.usersDAO().doesUserExist(username) > 0
     }
+
 }
