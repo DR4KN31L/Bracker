@@ -122,6 +122,7 @@ fun LoginScreen(
                         value = username,
                         onValueChange = { viewModel.onUsernameChanged(it) },
                         label = { Text("Username") },
+                        singleLine = true,
                         leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null) },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -132,6 +133,7 @@ fun LoginScreen(
                         value = password,
                         onValueChange = { viewModel.onPasswordChanged(it) },
                         label = { Text("Password") },
+                        singleLine = true,
                         leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null) },
                         trailingIcon = {
                             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
