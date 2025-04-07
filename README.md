@@ -1,11 +1,10 @@
-This is a Kotlin Multiplatform project targeting Android, Desktop.
+# Bracker
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+This application is designed to help you track your expenses. It is an open-source project currently under development as a personal initiative. You can test it, use it to learn KMP and Kotlin, or simply try it out for fun!
 
-
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+What can you do with this application?
+- Create your own expense categories!
+- Set up reusable items to easily register your payments within each category, giving you greater control over your spending. 😉
+- Customize your profile with a dedicated section.
+- Track your expenses with a detailed section where you can analyze your spending by category, month, average, and total across all categories.
+- Visualize your spending habits with charts that provide insights into your financial behavior
