@@ -142,6 +142,7 @@ fun CreateAccountScreen(onNavigateBack: (String) -> Unit, modifier: Modifier = M
                         value = name,
                         onValueChange = viewModel::onNameChanged,
                         label = { Text("Name") },
+                        singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
@@ -150,6 +151,7 @@ fun CreateAccountScreen(onNavigateBack: (String) -> Unit, modifier: Modifier = M
                         value = lastname,
                         onValueChange = viewModel::onLastNameChanged,
                         label = { Text("Lastname") },
+                        singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
@@ -158,6 +160,7 @@ fun CreateAccountScreen(onNavigateBack: (String) -> Unit, modifier: Modifier = M
                         value = username,
                         onValueChange = viewModel::onUsernameChanged,
                         label = { Text("Username") },
+                        singleLine = true,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 4.dp)
@@ -170,6 +173,7 @@ fun CreateAccountScreen(onNavigateBack: (String) -> Unit, modifier: Modifier = M
                         value = password,
                         onValueChange = viewModel::onPasswordChanged,
                         label = { Text("Password") },
+                        singleLine = true,
                         trailingIcon = {
                             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                                 Icon(
