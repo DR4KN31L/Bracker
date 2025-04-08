@@ -11,6 +11,7 @@ androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.4"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
+bcrypt = "0.10.2"
 compose-multiplatform = "1.7.3"
 junit = "4.13.2"
 kotlin = "2.1.10"
@@ -28,9 +29,11 @@ sqlite = "2.5.0-rc03"
 ksp = "2.1.10-1.0.29"
 #Splash screen
 core-splashscreen = "1.0.1"
+foundationAndroid = "1.7.8"
 
 
 [libraries]
+bcrypt = { module = "at.favre.lib:bcrypt", version.ref = "bcrypt" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -65,6 +68,7 @@ koin-compose-viewmodel = {module = "io.insert-koin:koin-compose-viewmodel", vers
 
 #splashScreen
 core-splashscreen = {group = "androidx.core" , name = "core-splashscreen" ,version.ref = "core-splashscreen"}
+androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 
 
 [plugins]
