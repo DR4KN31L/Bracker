@@ -1,5 +1,4 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -15,7 +14,6 @@ plugins {
 
 kotlin {
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -49,7 +47,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(libs.navigation.compose)
             implementation(libs.kotlinx.serialization.json)
-            implementation("at.favre.lib:bcrypt:0.10.2")
+            implementation(libs.bcrypt)
 
             //Rom
             implementation(libs.room.runtime)
@@ -103,16 +101,21 @@ dependencies {
 compose.desktop {
     application {
         mainClass = "com.bracker.app.MainKt"
-
         nativeDistributions {
-            targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.bracker.app"
+            targetFormats(
+                TargetFormat.Deb,
+                TargetFormat.Dmg,
+                TargetFormat.Msi,
+                TargetFormat.Exe
+            )
+            packageName = "Bracker"
             packageVersion = "1.0.0"
         }
     }
 }
 
 dependencies{
+    implementation(libs.androidx.foundation.android)
     ksp(libs.room.compiler)
 }
 

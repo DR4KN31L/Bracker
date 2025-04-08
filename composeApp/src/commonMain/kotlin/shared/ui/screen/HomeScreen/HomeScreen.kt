@@ -24,7 +24,7 @@ fun HomeScreen() {
     val bottomNavController = rememberNavController()
 
     val items = listOf(
-        Routes.NavDestination.Home, Routes.NavDestination.Profile, Routes.NavDestination.Charts
+        Routes.NavDestination.Profile, Routes.NavDestination.Home, Routes.NavDestination.Charts
     )
 
     Scaffold(
@@ -32,7 +32,7 @@ fun HomeScreen() {
         bottomBar = {
             BottomNavigation(
                 backgroundColor = Color.White
-            ){
+            ) {
                 val navBackStackEntry by bottomNavController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
                 items.forEach { screen ->
