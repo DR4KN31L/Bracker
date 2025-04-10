@@ -20,7 +20,7 @@ import shared.routes.HomeNavigator
 
 // Android Documentation : https://developer.android.com/develop/ui/compose/navigation#bottom-nav
 @Composable
-fun HomeScreen() {
+fun HomeScreen(userId: Int) {
     val bottomNavController = rememberNavController()
 
     val items = listOf(
@@ -55,6 +55,7 @@ fun HomeScreen() {
         }
     ) { innerPadding ->
         HomeNavigator(
+            userId = userId,
             navController = bottomNavController,
             modifier = Modifier.padding(innerPadding)
         )

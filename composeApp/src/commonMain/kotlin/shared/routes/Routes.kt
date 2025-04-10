@@ -18,16 +18,16 @@ sealed class Routes {
     data object CreateAccount : Routes()
 
     @Serializable
-    data object Home : Routes()
+    data class Home(val userId: Int) : Routes()
 
     sealed class NavDestination(val title: String, val route: String, val icon: ImageVector) :
         Routes() {
         data object Home :
-            NavDestination(title = "Home", route = "HomeScreen", icon = Icons.Filled.Home)
+            NavDestination(title = "Home", route = "CategoryScreen", icon = Icons.Filled.Home)
 
         data object Profile : NavDestination(
             title = "Profile",
-            route = "ProfileScren",
+            route = "ProfileScreen",
             icon = Icons.Filled.AccountCircle
         )
 

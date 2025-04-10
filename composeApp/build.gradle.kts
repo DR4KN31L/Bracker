@@ -115,6 +115,7 @@ compose.desktop {
 }
 
 dependencies{
+    implementation(libs.androidx.foundation.layout.android)
     implementation(libs.androidx.foundation.android)
     ksp(libs.room.compiler)
 }
