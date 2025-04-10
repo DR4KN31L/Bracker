@@ -3,11 +3,11 @@ package shared.data.repository
 import androidx.sqlite.SQLiteException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import shared.data.localDb.BrackerDB
+import shared.data.dao.UserDAO
 import shared.data.model.User
 import shared.utils.OperationResult
 
-class UserRepository(private val database: BrackerDB) {
+class UserRepository(private val userDAO: UserDAO) {
 
     private val dispatcher = Dispatchers.IO
 
@@ -15,12 +15,12 @@ class UserRepository(private val database: BrackerDB) {
         val result = withContext(dispatcher) {
             if (!allowUpdate) {
                 try {
-                    database.usersDAO().insertUser(user)
+                    userDAO.insertUser(user)
                 } catch (e: SQLiteException) {
                     return@withContext -1L
                 }
             } else {
-                database.usersDAO().upsertUser(user)
+                userDAO.upsertUser(user)
             }
         }
 
@@ -32,7 +32,7 @@ class UserRepository(private val database: BrackerDB) {
     }
 
     suspend fun doesUserExist(username: String): Boolean {
-        return database.usersDAO().doesUserExist(username) > 0
+        return userDAO.doesUserExist(username) > 0
     }
 
 }

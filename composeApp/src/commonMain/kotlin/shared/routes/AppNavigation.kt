@@ -37,7 +37,7 @@ fun AppNavigation() {
             LoginScreen(
                 usernameParam = createAccountPage.username,
                 onNavigateToCreateAccount = { navController.navigate(Routes.CreateAccount) },
-                onNavigateHome = { navController.navigate(Routes.Home) }
+                onNavigateHome = { user -> navController.navigate(Routes.Home(user.id)) }
             )
         }
         composable<Routes.CreateAccount>(
@@ -57,8 +57,9 @@ fun AppNavigation() {
             exitTransition = animatedNavExitTransitions(),
             popEnterTransition = animatedPopEnter(),
             popExitTransition = animatedPopExit()
-        ) {
-            HomeScreen()
+        ) { backStackEntry ->
+            val route = backStackEntry.toRoute<Routes.Home>()
+            HomeScreen(userId = route.userId)
         }
     }
 }
