@@ -15,7 +15,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import bracker.composeapp.generated.resources.Res
-import bracker.composeapp.generated.resources.compose_multiplatform
+import bracker.composeapp.generated.resources.logo
 import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.painterResource
 
@@ -24,18 +24,18 @@ fun SplashScreen(modifier: Modifier = Modifier,onTimeOut:(String?) -> Unit){
     val alpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        delay(250)
+        delay(500)
         alpha.animateTo(1f, animationSpec = tween(675))
-        delay(250)
+        delay(500)
         alpha.animateTo(0f, animationSpec = tween(675))
         onTimeOut(null)
     }
         Box(
-            modifier = modifier.fillMaxSize().background(Color.DarkGray),
+            modifier = modifier.fillMaxSize().background(Color.White),
             contentAlignment = Alignment.Center
         ) {
             Image(
-                painter = painterResource(Res.drawable.compose_multiplatform),
+                painter = painterResource(Res.drawable.logo),
                 contentDescription = null,
                 contentScale = ContentScale.Fit,
                 modifier = modifier.alpha(alpha.value)

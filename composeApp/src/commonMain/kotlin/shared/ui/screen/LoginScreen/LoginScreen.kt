@@ -10,17 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -37,15 +27,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import bracker.composeapp.generated.resources.Res
 import bracker.composeapp.generated.resources.compose_multiplatform
+import bracker.composeapp.generated.resources.passwd
+import bracker.composeapp.generated.resources.user
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import shared.data.model.LoggedInUser
+import shared.ui.screen.composables.CustomTextField
+import shared.ui.screen.composables.CustomizedButton
+import shared.ui.screen.composables.TexturedBackground
+import shared.utils.SOFT_GREEN
 import shared.viewModel.LoginViewModel
 
 @Composable
@@ -76,104 +70,89 @@ fun LoginScreen(
             snackbarHostState.showSnackbar(message)
         }
     }
+    TexturedBackground {
+        MaterialTheme {
+            Scaffold(
+                containerColor = Color.Transparent,
+                snackbarHost = {
 
-    MaterialTheme {
-        Scaffold(
-            containerColor = Color.White,
-            snackbarHost = {
-
-                SnackbarHost(hostState = snackbarHostState) { data ->
-                    Snackbar(
-                        containerColor = Color.DarkGray,
-                        contentColor = snackbarMessage.value?.second ?: Color.White,
-                        modifier = Modifier.wrapContentWidth()
-                    ) {
-                        Text(
-                            text = data.visuals.message,
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center
-                        )
+                    SnackbarHost(hostState = snackbarHostState) { data ->
+                        Snackbar(
+                            containerColor = Color.DarkGray,
+                            contentColor = snackbarMessage.value?.second ?: Color.White,
+                            modifier = Modifier.wrapContentWidth()
+                        ) {
+                            Text(
+                                text = data.visuals.message,
+                                modifier = Modifier.fillMaxWidth(),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
-            }
-        ) { padding ->
-            Column(
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
+            ) { padding ->
                 Column(
-                    modifier = Modifier
-                        .widthIn(min = 280.dp, max = 400.dp)
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(padding)
                         .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = painterResource(Res.drawable.compose_multiplatform),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.size(128.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = username,
-                        onValueChange = { viewModel.onUsernameChanged(it) },
-                        label = { Text("Username") },
-                        singleLine = true,
-                        leadingIcon = { Icon(Icons.Filled.Person, contentDescription = null) },
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                    )
-
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = { viewModel.onPasswordChanged(it) },
-                        label = { Text("Password") },
-                        singleLine = true,
-                        leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = null) },
-                        trailingIcon = {
-                            IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                                Icon(
-                                    imageVector = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = null
-                                )
-                            }
-                        },
-                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(4.dp)
-                    )
-
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                            .widthIn(min = 280.dp, max = 400.dp)
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        ElevatedButton(
-                            onClick = {
-                                viewModel.logIn { success, loggedUser ->
-                                    if (success && loggedUser != null) onNavigateHome(loggedUser)
-                                }
-                            },
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(8.dp)
-                        ) {
-                            Text("Log in")
-                        }
+                        Image(
+                            painter = painterResource(Res.drawable.compose_multiplatform),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.size(128.dp)
+                        )
 
-                        ElevatedButton(
-                            onClick = { onNavigateToCreateAccount() },
-                            modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(8.dp)
+                        CustomTextField(
+                            value = username,
+                            onValueChange = { viewModel.onUsernameChanged(it) },
+                            label = "Username",
+                            painter = painterResource(Res.drawable.user),
+                        )
+
+                        CustomTextField(
+                            value = password,
+                            onValueChange = { viewModel.onPasswordChanged(it) },
+                            label = "Password",
+                            painter = painterResource(Res.drawable.passwd),
+                            isPassword = true,
+                            isPasswordVisible = isPasswordVisible,
+                            onVisibilityToggle = { isPasswordVisible = !isPasswordVisible },
+                        )
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Text("Create Account")
+                            CustomizedButton(
+                                onClick = {
+                                    viewModel.logIn { success, loggedUser ->
+                                        if (success && loggedUser != null) onNavigateHome(loggedUser)
+                                    }
+                                },
+                                modifier = Modifier.weight(1f),
+                                text = "Log in",
+                                color = SOFT_GREEN
+                            )
+
+                            CustomizedButton(
+                                onClick = { onNavigateToCreateAccount() },
+                                modifier = Modifier.weight(1f),
+                                text = "Create Account",
+                                color = SOFT_GREEN
+                            )
                         }
                     }
                 }
