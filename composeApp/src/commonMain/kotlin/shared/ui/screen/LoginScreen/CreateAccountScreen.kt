@@ -16,19 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
@@ -45,14 +40,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import bracker.composeapp.generated.resources.Res
 import bracker.composeapp.generated.resources.compose_multiplatform
+import bracker.composeapp.generated.resources.passwd
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import shared.ui.screen.composables.CustomTextField
+import shared.ui.screen.composables.CustomizedButton
+import shared.ui.screen.composables.TexturedBackground
+import shared.utils.GOLD
+import shared.utils.SOFT_YELLOW_50
 import shared.viewModel.UserViewModel
 
 
@@ -77,138 +76,116 @@ fun CreateAccountScreen(onNavigateBack: (String) -> Unit, modifier: Modifier = M
             snackbarHostState.showSnackbar(message)
         }
     }
-
-    Scaffold(
-        snackbarHost = {
-
-            SnackbarHost(hostState = snackbarHostState) { data ->
-                Snackbar(
-                    containerColor = Color.DarkGray,
-                    contentColor = snackbarMessage.value?.second ?: Color.White,
-                    modifier = Modifier.wrapContentWidth()
+    TexturedBackground {
+        Scaffold(
+            containerColor = Color.Transparent,
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) { data ->
+                    Snackbar(
+                        containerColor = Color.DarkGray,
+                        contentColor = snackbarMessage.value?.second ?: Color.White,
+                        modifier = Modifier.wrapContentWidth()
+                    ) {
+                        Text(
+                            text = data.visuals.message,
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
+            },
+            topBar = {
+                IconButton(
+                    onClick = { onNavigateBack("") },
+                    modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(
-                        text = data.visuals.message,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center
+                    Icon(
+                        imageVector = Icons.Filled.ChevronLeft,
+                        contentDescription = "Back To Login"
                     )
                 }
-            }
-        },
-        topBar = {
-            IconButton(
-                onClick = { onNavigateBack("") },
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Filled.ChevronLeft,
-                    contentDescription = "Back To Login"
-                )
-            }
-        },
-        containerColor = Color.White
-    ) {
-        BoxWithConstraints(
-            modifier = Modifier.fillMaxSize().padding(it)
+            },
         ) {
-            val maxHeight = this.maxHeight
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = maxHeight)
-                    .padding(16.dp)
-                    .verticalScroll(scrollState),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+            BoxWithConstraints(
+                modifier = Modifier.fillMaxSize().padding(it)
             ) {
-                Spacer(Modifier.height(16.dp))
-
-                Image(
-                    painter = painterResource(Res.drawable.compose_multiplatform),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.size(128.dp)
-                )
-
-                Spacer(Modifier.height(16.dp))
+                val maxHeight = this.maxHeight
 
                 Column(
                     modifier = Modifier
-                        .widthIn(min = 280.dp, max = 400.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .fillMaxWidth()
+                        .heightIn(min = maxHeight)
+                        .padding(16.dp)
+                        .verticalScroll(scrollState),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange = viewModel::onNameChanged,
-                        label = { Text("Name") },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = lastname,
-                        onValueChange = viewModel::onLastNameChanged,
-                        label = { Text("Lastname") },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
-                    )
-                    OutlinedTextField(
-                        value = username,
-                        onValueChange = viewModel::onUsernameChanged,
-                        label = { Text("Username") },
-                        singleLine = true,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp)
+                    Spacer(Modifier.height(16.dp))
+
+                    Image(
+                        painter = painterResource(Res.drawable.compose_multiplatform),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.size(128.dp)
                     )
 
-                    val passwordInteractionSource = remember { MutableInteractionSource() }
-                    val isPasswordFocused by passwordInteractionSource.collectIsFocusedAsState()
+                    Spacer(Modifier.height(16.dp))
 
-                    OutlinedTextField(
-                        value = password,
-                        onValueChange = viewModel::onPasswordChanged,
-                        label = { Text("Password") },
-                        singleLine = true,
-                        trailingIcon = {
-                            IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                                Icon(
-                                    imageVector = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                    contentDescription = if (isPasswordVisible) "Hide Password" else "Show Password"
-                                )
-                            }
-                        },
-                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        interactionSource = passwordInteractionSource
-                    )
-
-                    if (isPasswordFocused) {
-                        passwordCard()
-                    }
-
-                    Spacer(Modifier.height(8.dp))
-
-                    ElevatedButton(
-                        onClick = {
-                            viewModel.createUser { success ->
-                                if (success) onNavigateBack(viewModel.username.value)
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(8.dp)
+                            .widthIn(min = 280.dp, max = 400.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text("Create Account")
-                    }
-                }
+                        CustomTextField(
+                            value = name,
+                            onValueChange = viewModel::onNameChanged,
+                            label = "Name",
+                        )
+                        CustomTextField(
+                            value = lastname,
+                            onValueChange = viewModel::onLastNameChanged,
+                            label = "Lastname",
+                        )
+                        CustomTextField(
+                            value = username,
+                            onValueChange = viewModel::onUsernameChanged,
+                            label = "Username",
+                        )
 
-                Spacer(Modifier.height(24.dp))
+                        val passwordInteractionSource = remember { MutableInteractionSource() }
+                        val isPasswordFocused by passwordInteractionSource.collectIsFocusedAsState()
+
+                        CustomTextField(
+                            value = password,
+                            onValueChange = viewModel::onPasswordChanged,
+                            label = "Password",
+                            painter = painterResource(Res.drawable.passwd),
+                            isPassword = true,
+                            isPasswordVisible = isPasswordVisible,
+                            onVisibilityToggle = {isPasswordVisible = !isPasswordVisible},
+                            interactionSource = passwordInteractionSource
+                        )
+
+                        if (isPasswordFocused) {
+                            passwordCard()
+                        }
+
+                        Spacer(Modifier.height(8.dp))
+
+                        CustomizedButton(
+                            onClick = {
+                                viewModel.createUser { success ->
+                                    if (success) onNavigateBack(viewModel.username.value)
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            color = GOLD,
+                            text = "Create Account"
+                        )
+                    }
+
+                    Spacer(Modifier.height(24.dp))
+                }
             }
         }
     }
@@ -220,7 +197,7 @@ fun passwordCard() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F1F1))
+        colors = CardDefaults.cardColors(containerColor = SOFT_YELLOW_50)
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
             Text("Requisitos de la Contraseña:", style = MaterialTheme.typography.bodyMedium)
